@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.geekyarticles.linearalgebra.matrix.MatrixTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2017-08-01T12:24:23" hostname="debasishc" time="0.037">
+  <properties/>
+  <testcase name="testMult2x2" classname="com.geekyarticles.linearalgebra.matrix.MatrixTest" time="0.036"/>
+  <testcase name="testAdd2x2" classname="com.geekyarticles.linearalgebra.matrix.MatrixTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

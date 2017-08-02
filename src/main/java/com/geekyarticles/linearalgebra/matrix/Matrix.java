@@ -57,8 +57,83 @@ public class Matrix<E, F extends Field<E>> {
     public Matrix<E,F> invert(){
         E [][] result = (E[][]) new Object[rows][cols];
         E [][] appendage = (E[][]) new Object[rows][cols];
-        return null;
+
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                appendage[i][j] = values[i][j];
+                if(i==j){
+                    result[i][j] = field.one();
+                }else{
+                    result[i][j] = field.zero();
+                }
+            }
+        }
+
+        for(int i=0;i<rows;i++){
+            swapWithPivotRow(appendage, result, i);
+            E pivotValue = appendage[i][i];
+            multiplyRow(appendage, result, i, field.invert(pivotValue));
+            for(int j=i+1;j<rows;j++){
+                E mult = appendage[j][i];
+                substractMultipleOf(appendage, result,i,j,mult);
+            }
+        }
+        for(int i=rows-1;i>=0;i--){
+            for(int j=i-1;j>=0;j--){
+                E mult = appendage[j][i];
+                substractMultipleOf(appendage, result,i,j,mult);
+            }
+        }
+        return new Matrix<>(result, field);
     }
+
+    private void swapRows(E [][] appendage, E [][] result, int row1, int row2){
+        E[] r1 = appendage[row1];
+        E[] r2 = appendage[row2];
+        appendage[row1] = r2;
+        appendage[row2] = r1;
+
+        r1 = result[row1];
+        r2 = result[row2];
+        result[row1] = r2;
+        result[row2] = r1;
+    }
+
+
+    private int findPivot(E[][] matrix, int column){
+        for(int i=column;i<rows;i++){
+            if(!matrix[i][column].equals(field.zero())){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void swapWithPivotRow(E [][] appendage, E [][] result, int pivotColumn){
+        int pivotRow = findPivot(appendage, pivotColumn);
+        if(pivotRow!=pivotColumn){
+            swapRows(appendage, result, pivotRow, pivotColumn);
+        }
+    }
+
+    private void substractMultipleOf(E [][] appendage, E [][] result, int source, int target, E multiplier){
+        for(int j=0;j<cols;j++){
+            appendage[target][j]
+                    = field.add(appendage[target][j], field.negate(field.multiply(appendage[source][j], multiplier)));
+            result[target][j]
+                    = field.add(result[target][j], field.negate(field.multiply(result[source][j], multiplier)));
+        }
+    }
+
+    private void multiplyRow(E [][] appendage, E [][] result, int row,E multiplier){
+        for(int j=0;j<cols;j++){
+            appendage[row][j]
+                    = field.multiply(appendage[row][j], multiplier);
+            result[row][j]
+                    = field.multiply(result[row][j], multiplier);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

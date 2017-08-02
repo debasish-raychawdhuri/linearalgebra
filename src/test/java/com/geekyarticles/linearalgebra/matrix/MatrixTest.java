@@ -42,4 +42,18 @@ public class MatrixTest {
 
         assertEquals(result, C);
     }
+
+    @Test
+    public void testInvers2x2(){
+        FloatField field = new FloatField(10);
+        Apfloat[][] lhsValues = new Apfloat[][]{{new Apfloat(1), new Apfloat(2)},
+                {new Apfloat(3), new Apfloat(4)}};
+        Apfloat[][] resValues = new Apfloat[][]{{new Apfloat(-2), new Apfloat(1)},
+                {new Apfloat(1.5), new Apfloat(-0.5)}};
+        Matrix<Apfloat, FloatField> A = new Matrix<>(lhsValues, field );
+        Matrix<Apfloat, FloatField> result = new Matrix<>(resValues, field );
+        Matrix<Apfloat, FloatField> C = A.invert();
+
+        assertEquals(result, C);
+    }
 }

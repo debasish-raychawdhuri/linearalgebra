@@ -27,7 +27,14 @@ public class Matrix<E, F extends Field<E>> {
         this. field = field;
     }
 
+    private void checkAdditionCompatibility(Matrix<E, F> rhs){
+        if(this.rows!=rhs.rows || this.cols!=rhs.cols){
+            throw new IllegalArgumentException("The matrices have incompatible dimensions for addition");
+        }
+    }
+
     public Matrix<E,F> add(Matrix<E, F> rhs){
+        checkAdditionCompatibility(rhs);
         E [][] result = (E[][]) new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
@@ -36,7 +43,15 @@ public class Matrix<E, F extends Field<E>> {
         }
         return new Matrix<>(result, field);
     }
+
+    private void checkMultiplicationCompatibility(Matrix<E,F> lhs, Matrix<E,F> rhs){
+        if(lhs.cols!=rhs.rows){
+            throw new IllegalArgumentException("Matrices have incompatible dimensions for multiplication");
+        }
+    }
+
     public Matrix<E,F> multiply(Matrix<E, F> rhs){
+        checkMultiplicationCompatibility(this, rhs);
         E [][] result = (E[][]) new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
@@ -54,7 +69,25 @@ public class Matrix<E, F extends Field<E>> {
         return new Matrix<>(result, field);
     }
 
+    private void checkSquareMatrix(){
+        if(this.rows != this.cols){
+            throw new IllegalArgumentException("The matrix is not a square matrix");
+        }
+    }
+
+    public Matrix<E,F> transpose(){
+        checkSquareMatrix();
+        E [][] result = (E[][]) new Object[rows][cols];
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                result[i][j] = values[j][i];
+            }
+        }
+        return new Matrix<>(result, field);
+    }
+
     public Matrix<E,F> invert(){
+        checkSquareMatrix();
         E [][] result = (E[][]) new Object[rows][cols];
         E [][] appendage = (E[][]) new Object[rows][cols];
 

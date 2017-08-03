@@ -93,14 +93,23 @@ public class Matrix<E, F extends Field<E>> {
             }
         }
 
-        for(int i=0;i<rows;i++){
+        return getRank(0, matrix);
+    }
+
+    private int getRank(int diagpos, E[][] matrix){
+        if(diagpos>=rows){
+            return 0;
+        }else if(diagpos>=cols){
+            return 0;
+        }
+        for(int i=diagpos;i<rows;i++){
             try {
                 swapWithPivotRow(matrix, i);
             }catch (SingularMatrixException ex){
                 try{
                     swapWithPivotColumn(matrix,i);
                 }catch (SingularMatrixException ex2) {
-                    return i;
+                    return i+getRank(i+1, matrix);
                 }
             }
             E pivotValue = matrix[i][i];
@@ -110,7 +119,7 @@ public class Matrix<E, F extends Field<E>> {
                 substractMultipleOf(matrix,i,j,mult);
             }
         }
-        return rows;
+        return rows-diagpos;
     }
 
     public Matrix<E,F> invert(){

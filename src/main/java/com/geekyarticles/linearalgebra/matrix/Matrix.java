@@ -1,6 +1,8 @@
 package com.geekyarticles.linearalgebra.matrix;
 
 import com.geekyarticles.linearalgebra.field.Field;
+import com.geekyarticles.linearalgebra.field.FloatField;
+import org.apfloat.Apfloat;
 
 import java.util.Arrays;
 
@@ -266,4 +268,62 @@ public class Matrix<E, F extends Field<E>> {
         result = 31 * result + Arrays.deepHashCode(values);
         return result;
     }
+
+    public String toString(){
+        char upperLeft = '\u250C';
+        char upperRight = '\u2510';
+        char lowerLeft = '\u2514';
+        char lowerRight = '\u2518';
+        char leftBar = '\u2502';
+        char bar = '\u2502';
+
+        int [] colWidths = new int[cols];
+        int totalWidth = 0;
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                int widthOfValue = values[i][j].toString().length();
+                if(widthOfValue>colWidths[j]){
+                    colWidths[j] = widthOfValue;
+                }
+            }
+        }
+        for(int i=0;i<colWidths.length;i++){
+            totalWidth+=colWidths[i]+2;
+        }
+        totalWidth-=2;
+
+        StringBuilder sb =new StringBuilder();
+        sb.append(upperLeft);
+        for(int i=0;i<totalWidth;i++){
+            sb.append(' ');
+        }
+        sb.append(upperRight).append('\n');
+
+        for(int i=0;i<rows;i++){
+            sb.append(bar);
+            for(int j=0;j<cols;j++){
+                String val = values[i][j].toString();
+                int widthOfValue = val.length();
+                int space = colWidths[j] - widthOfValue;
+
+                for(int k=0;k<space;k++){
+                    sb.append(' ');
+                }
+
+                sb.append(val);
+                if(j!=cols-1){
+                    sb.append("  ");
+                }
+            }
+            sb.append(bar).append('\n');
+        }
+        sb.append(lowerLeft);
+        for(int i=0;i<totalWidth;i++){
+            sb.append(' ');
+        }
+        sb.append(lowerRight);
+        return sb.toString();
+
+    }
+
 }

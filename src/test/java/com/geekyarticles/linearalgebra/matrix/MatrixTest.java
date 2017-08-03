@@ -44,7 +44,7 @@ public class MatrixTest {
     }
 
     @Test
-    public void testInvers2x2(){
+    public void testInverse2x2(){
         FloatField field = new FloatField(10);
         Apfloat[][] lhsValues = new Apfloat[][]{{new Apfloat(1), new Apfloat(2)},
                 {new Apfloat(3), new Apfloat(4)}};
@@ -55,5 +55,33 @@ public class MatrixTest {
         Matrix<Apfloat, FloatField> C = A.invert();
 
         assertEquals(result, C);
+    }
+
+    @Test
+    public void testRank5x4(){
+        FloatField field = new FloatField(10);
+        Apfloat[][] lhsValues = new Apfloat[][]{
+                {new Apfloat(1), new Apfloat(2), new Apfloat(3), new Apfloat(4), new Apfloat(2)},
+                {new Apfloat(2), new Apfloat(3), new Apfloat(4), new Apfloat(5), new Apfloat(4)},
+                {new Apfloat(3), new Apfloat(4), new Apfloat(5), new Apfloat(6), new Apfloat(9)},
+                {new Apfloat(4), new Apfloat(5), new Apfloat(6), new Apfloat(7), new Apfloat(4)}};
+        Matrix<Apfloat, FloatField> A = new Matrix<>(lhsValues, field );
+        int rank = A.getRank();
+
+        assertEquals(3, rank);
+    }
+
+    @Test
+    public void testRank5x4_2(){
+        FloatField field = new FloatField(10);
+        Apfloat[][] lhsValues = new Apfloat[][]{
+                {new Apfloat(1), new Apfloat(2), new Apfloat(3), new Apfloat(4), new Apfloat(2)},
+                {new Apfloat(2), new Apfloat(3), new Apfloat(4), new Apfloat(5), new Apfloat(4)},
+                {new Apfloat(3), new Apfloat(4), new Apfloat(5), new Apfloat(6), new Apfloat(9)},
+                {new Apfloat(4), new Apfloat(1), new Apfloat(6), new Apfloat(7), new Apfloat(4)}};
+        Matrix<Apfloat, FloatField> A = new Matrix<>(lhsValues, field );
+        int rank = A.getRank();
+
+        assertEquals(4, rank);
     }
 }

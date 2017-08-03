@@ -3,7 +3,6 @@ package com.geekyarticles.linearalgebra.matrix;
 import com.geekyarticles.linearalgebra.field.Field;
 
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * Created by debasishc on 1/8/17.
@@ -76,14 +75,42 @@ public class Matrix<E, F extends Field<E>> {
     }
 
     public Matrix<E,F> transpose(){
-        checkSquareMatrix();
-        E [][] result = (E[][]) new Object[rows][cols];
+        E [][] result = (E[][]) new Object[cols][rows];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[i][j] = values[j][i];
+                result[j][i] = values[i][j];
             }
         }
         return new Matrix<>(result, field);
+    }
+
+    public int getRank(){
+        E [][] matrix = (E[][]) new Object[rows][cols];
+
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                matrix[i][j] = values[i][j];
+            }
+        }
+
+        for(int i=0;i<rows;i++){
+            try {
+                swapWithPivotRow(matrix, i);
+            }catch (SingularMatrixException ex){
+                try{
+                    swapWithPivotColumn(matrix,i);
+                }catch (SingularMatrixException ex2) {
+                    return i;
+                }
+            }
+            E pivotValue = matrix[i][i];
+            multiplyRow(matrix, i, field.invert(pivotValue));
+            for(int j=i+1;j<rows;j++){
+                E mult = matrix[j][i];
+                substractMultipleOf(matrix,i,j,mult);
+            }
+        }
+        return rows;
     }
 
     public Matrix<E,F> invert(){
@@ -121,19 +148,26 @@ public class Matrix<E, F extends Field<E>> {
     }
 
     private void swapRows(E [][] appendage, E [][] result, int row1, int row2){
-        E[] r1 = appendage[row1];
-        E[] r2 = appendage[row2];
-        appendage[row1] = r2;
-        appendage[row2] = r1;
-
-        r1 = result[row1];
-        r2 = result[row2];
-        result[row1] = r2;
-        result[row2] = r1;
+        swapRows(appendage, row1, row2);
+        swapRows(result, row1, row2);
     }
 
+    private void swapRows(E [][] matrix, int row1, int row2){
+        E[] r1 = matrix[row1];
+        E[] r2 = matrix[row2];
+        matrix[row1] = r2;
+        matrix[row2] = r1;
+    }
 
-    private int findPivot(E[][] matrix, int column){
+    private void swapColumns(E [][] matrix, int col1, int col2){
+        for(int i=0;i<rows;i++){
+            E temp = matrix[i][col1];
+            matrix[i][col1] = matrix[i][col2];
+            matrix[i][col2] = temp;
+        }
+    }
+
+    private int findPivotRow(E[][] matrix, int column){
         for(int i=column;i<rows;i++){
             if(!matrix[i][column].equals(field.zero())){
                 return i;
@@ -142,28 +176,63 @@ public class Matrix<E, F extends Field<E>> {
         return -1;
     }
 
+    private int findPivotColumn(E[][] matrix, int row){
+        for(int i=row;i<cols;i++){
+            if(!matrix[row][i].equals(field.zero())){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private void swapWithPivotRow(E [][] appendage, E [][] result, int pivotColumn){
-        int pivotRow = findPivot(appendage, pivotColumn);
+        int pivotRow = findPivotRow(appendage, pivotColumn);
         if(pivotRow!=pivotColumn){
             swapRows(appendage, result, pivotRow, pivotColumn);
         }
     }
 
+    private void swapWithPivotRow(E [][] appendage, int pivotColumn){
+        int pivotRow = findPivotRow(appendage, pivotColumn);
+        if(pivotRow<0){
+            throw new SingularMatrixException("The matrix is singular");
+        }
+        if(pivotRow!=pivotColumn){
+            swapRows(appendage, pivotRow, pivotColumn);
+        }
+    }
+
+    private void swapWithPivotColumn(E [][] appendage, int pivotRow){
+        int pivotColumn = findPivotColumn(appendage, pivotRow);
+        if(pivotColumn<0){
+            throw new SingularMatrixException("The matrix is singular");
+        }
+        if(pivotRow!=pivotColumn){
+            swapColumns(appendage, pivotColumn, pivotRow);
+        }
+    }
+
     private void substractMultipleOf(E [][] appendage, E [][] result, int source, int target, E multiplier){
+        substractMultipleOf(appendage, source, target, multiplier);
+        substractMultipleOf(result, source, target, multiplier);
+    }
+
+    private void substractMultipleOf(E [][] matrix, int source, int target, E multiplier){
         for(int j=0;j<cols;j++){
-            appendage[target][j]
-                    = field.add(appendage[target][j], field.negate(field.multiply(appendage[source][j], multiplier)));
-            result[target][j]
-                    = field.add(result[target][j], field.negate(field.multiply(result[source][j], multiplier)));
+            matrix[target][j]
+                    = field.add(matrix[target][j], field.negate(field.multiply(matrix[source][j], multiplier)));
         }
     }
 
     private void multiplyRow(E [][] appendage, E [][] result, int row,E multiplier){
+        multiplyRow(appendage, row, multiplier);
+        multiplyRow(result, row, multiplier);
+    }
+
+    private void multiplyRow(E [][] matrix, int row,E multiplier){
         for(int j=0;j<cols;j++){
-            appendage[row][j]
-                    = field.multiply(appendage[row][j], multiplier);
-            result[row][j]
-                    = field.multiply(result[row][j], multiplier);
+            matrix[row][j]
+                    = field.multiply(matrix[row][j], multiplier);
         }
     }
 

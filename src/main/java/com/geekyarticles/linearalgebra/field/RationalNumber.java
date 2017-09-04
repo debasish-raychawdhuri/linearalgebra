@@ -39,6 +39,24 @@ public class RationalNumber {
         return new RationalNumber(numerator.multiply(rhs.numerator), denominator.multiply(rhs.denominator));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RationalNumber that = (RationalNumber) o;
+
+        if (numerator != null ? !numerator.equals(that.numerator) : that.numerator != null) return false;
+        return denominator != null ? denominator.equals(that.denominator) : that.denominator == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = numerator != null ? numerator.hashCode() : 0;
+        result = 31 * result + (denominator != null ? denominator.hashCode() : 0);
+        return result;
+    }
+
     public static void main(String [] args){
         RationalNumber rn = new RationalNumber(new BigInteger("24"), new BigInteger("-9"));
         RationalNumber rn2 = new RationalNumber(new BigInteger("24"), new BigInteger("21"));

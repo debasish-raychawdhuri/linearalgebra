@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 public class Polynomial<E> {
     private Field<E> baseField;
+    private Polynomial<E> zero = new Polynomial<E>(baseField, (E[]) new Object[]{});
+    private Polynomial<E> one = new Polynomial<E>(baseField, (E[]) new Object[]{baseField.one()});
     private E[] coefficients;
 
     public Polynomial(Field<E> baseField, E[] coefficients) {
@@ -34,6 +36,22 @@ public class Polynomial<E> {
         }
 
         return new Polynomial<>(baseField, coefficients);
+    }
+
+    public Polynomial<E> negate(){
+        E[] coeffs = (E[]) new Object[coefficients.length];
+        for(int i=0;i<coeffs.length;i++){
+            coeffs[i] = baseField.negate(coefficients[i]);
+        }
+        return new Polynomial<>(baseField, coeffs);
+    }
+
+    public Polynomial<E> zero(){
+        return zero;
+    }
+
+    public Polynomial<E> one(){
+        return one;
     }
 
     public Polynomial<E> multiply(Polynomial<E> rhs){

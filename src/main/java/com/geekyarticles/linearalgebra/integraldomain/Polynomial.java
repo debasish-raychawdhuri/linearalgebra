@@ -1,12 +1,15 @@
-package com.geekyarticles.linearalgebra.field;
+package com.geekyarticles.linearalgebra.integraldomain;
+
+import com.geekyarticles.linearalgebra.field.Field;
+import com.geekyarticles.linearalgebra.field.RationalField;
+import com.geekyarticles.linearalgebra.field.RationalNumber;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 
 public class Polynomial<E> {
     private Field<E> baseField;
-    private Polynomial<E> zero = new Polynomial<E>(baseField, (E[]) new Object[]{});
-    private Polynomial<E> one = new Polynomial<E>(baseField, (E[]) new Object[]{baseField.one()});
+
     private E[] coefficients;
 
     public Polynomial(Field<E> baseField, E[] coefficients) {
@@ -47,11 +50,11 @@ public class Polynomial<E> {
     }
 
     public Polynomial<E> zero(){
-        return zero;
+        return new Polynomial<E>(baseField, (E[]) new Object[]{});
     }
 
     public Polynomial<E> one(){
-        return one;
+        return new Polynomial<E>(baseField, (E[]) new Object[]{baseField.one()});
     }
 
     public Polynomial<E> multiply(Polynomial<E> rhs){
@@ -75,6 +78,41 @@ public class Polynomial<E> {
 
     }
 
+    public DivisionAlgorithmResult<Polynomial<E>> divisionAlgorithm(Polynomial<E> divisor){
+        if(coefficients.length<divisor.coefficients.length){
+            return new DivisionAlgorithmResult(this.zero(), this);
+        }
+        E[] qCoeffs = (E[]) new Object[coefficients.length - divisor.coefficients.length+1];
+        E[] rCoeffs = (E[]) new Object[coefficients.length];
+
+        for(int i=0;i<rCoeffs.length;i++){
+            rCoeffs[i] = this.coefficients[i];
+        }
+        for(int i=rCoeffs.length-1;i>=divisor.coefficients.length-1;i--){
+            E multiplier = baseField.multiply(rCoeffs[i],
+                    baseField.invert(divisor.coefficients[divisor.coefficients.length-1]));
+            for(int j=i;divisor.coefficients.length-1-i+j>=0;j--){
+                rCoeffs[j] = baseField.add(rCoeffs[j],baseField.negate(
+                        baseField.multiply(divisor.coefficients[divisor.coefficients.length-1-i+j], multiplier)));
+            }
+            qCoeffs[i-divisor.coefficients.length+1] = multiplier;
+        }
+
+        int rDeg = -1;
+        for(int i=rCoeffs.length-1;i>=0;i--){
+            if(!rCoeffs[i].equals(baseField.zero())){
+                rDeg = i;
+                break;
+            }
+        }
+        E[] rCoeffsRev = (E[]) new Object[rDeg+1];
+        for(int i=0;i<=rDeg;i++){
+            rCoeffsRev[i] = rCoeffs[i];
+        }
+
+        return new DivisionAlgorithmResult<>(new Polynomial<>(baseField, qCoeffs), new Polynomial<>(baseField, rCoeffsRev));
+    }
+
     @Override
     public String toString() {
         return  Arrays.toString(coefficients);
@@ -84,14 +122,18 @@ public class Polynomial<E> {
         Polynomial<RationalNumber> p1 = new Polynomial<>(new RationalField(), new RationalNumber[]{
                 new RationalNumber(new BigInteger("2"), new BigInteger("3")),
                 new RationalNumber(new BigInteger("2"), new BigInteger("5")),
-                new RationalNumber(new BigInteger("2"), new BigInteger("7")),
+                new RationalNumber(new BigInteger("-2"), new BigInteger("7")),
         });
         Polynomial<RationalNumber> p2 = new Polynomial<>(new RationalField(), new RationalNumber[]{
                 new RationalNumber(new BigInteger("2"), new BigInteger("3")),
                 new RationalNumber(new BigInteger("2"), new BigInteger("-5")),
                 new RationalNumber(new BigInteger("-2"), new BigInteger("7")),
+                new RationalNumber(new BigInteger("-2"), new BigInteger("7")),
         });
         System.out.println(p1.add(p2));
         System.out.println(p1.multiply(p2));
+        System.out.println(p2.divisionAlgorithm(p1));
+
+        System.out.println(p1.divisionAlgorithm(p2));
     }
 }

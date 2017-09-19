@@ -6,6 +6,9 @@ public class IntegerModuloPrimeField implements Field<BigInteger>{
     private BigInteger primeDivisor;
 
     public IntegerModuloPrimeField(BigInteger primeDivisor) {
+        if(!primeDivisor.isProbablePrime(100)){
+            throw new IllegalArgumentException("Divisor not a prime");
+        }
         this.primeDivisor = primeDivisor;
     }
 

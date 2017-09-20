@@ -43,6 +43,6 @@ public class PolynomialRing<E> implements EuclideanDomain<Polynomial<E>> {
 
     @Override
     public DivisionAlgorithmResult<Polynomial<E>> divisionAlgorithm(Polynomial<E> dividend, Polynomial<E> divisor) {
-        return null;
+        return dividend.divisionAlgorithm(divisor);
     }
 }

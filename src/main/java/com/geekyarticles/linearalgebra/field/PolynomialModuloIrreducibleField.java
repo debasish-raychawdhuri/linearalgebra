@@ -1,33 +1,32 @@
 package com.geekyarticles.linearalgebra.field;
 
-public class PolynomialModuloIrreducibleField<E> implements Field<E> {
-    @Override
-    public E invert(E value) {
-        return null;
+import com.geekyarticles.linearalgebra.integraldomain.ExtendedEuclidResult;
+import com.geekyarticles.linearalgebra.integraldomain.Polynomial;
+import com.geekyarticles.linearalgebra.integraldomain.PolynomialRing;
+
+public class PolynomialModuloIrreducibleField<E> extends PolynomialRing<E> implements Field<Polynomial<E>> {
+    private Polynomial<E> irreducibleBase;
+    private Field<E> baseField;
+
+    public PolynomialModuloIrreducibleField(Polynomial<E> irreducibleBase, Field<E> baseField) {
+        super(baseField);
+        this.irreducibleBase = irreducibleBase;
     }
 
     @Override
-    public E add(E lhs, E rhs) {
-        return null;
+    public Polynomial<E> invert(Polynomial<E> value) {
+        ExtendedEuclidResult<Polynomial<E>> eer = extendedEulidAlgorithm(value, irreducibleBase);
+        return eer.getLeftMultiplier().divisionAlgorithm(irreducibleBase).getRemainder();
     }
 
     @Override
-    public E multiply(E lhs, E rhs) {
-        return null;
+    public Polynomial<E> add(Polynomial<E> lhs, Polynomial<E> rhs) {
+        return lhs.add(rhs).divisionAlgorithm(irreducibleBase).getRemainder();
     }
 
     @Override
-    public E one() {
-        return null;
+    public Polynomial<E> multiply(Polynomial<E> lhs, Polynomial<E> rhs) {
+        return lhs.multiply(rhs).divisionAlgorithm(irreducibleBase).getRemainder();
     }
 
-    @Override
-    public E zero() {
-        return null;
-    }
-
-    @Override
-    public E negate(E value) {
-        return null;
-    }
 }

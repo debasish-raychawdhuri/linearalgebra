@@ -57,7 +57,10 @@ public class Polynomial<E> {
         return new Polynomial<E>(baseField, (E[]) new Object[]{baseField.one()});
     }
 
-    
+    public int degree(){
+        return coefficients.length-1;
+    }
+
 
     public Polynomial<E> multiply(Polynomial<E> rhs){
         int degree = coefficients.length-1 + rhs.coefficients.length;

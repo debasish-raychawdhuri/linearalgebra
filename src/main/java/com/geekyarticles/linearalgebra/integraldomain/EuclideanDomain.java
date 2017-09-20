@@ -1,6 +1,5 @@
 package com.geekyarticles.linearalgebra.integraldomain;
 
-import com.geekyarticles.linearalgebra.field.Field;
 import com.geekyarticles.linearalgebra.ring.Ring;
 import com.geekyarticles.linearalgebra.util.Tuple;
 

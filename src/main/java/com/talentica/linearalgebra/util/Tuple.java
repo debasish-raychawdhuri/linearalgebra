@@ -1,4 +1,4 @@
-package com.geekyarticles.linearalgebra.util;
+package com.talentica.linearalgebra.util;
 
 public class Tuple<E,F> {
     public E first;

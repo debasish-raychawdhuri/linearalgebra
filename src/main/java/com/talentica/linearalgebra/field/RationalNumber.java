@@ -1,4 +1,4 @@
-package com.geekyarticles.linearalgebra.field;
+package com.talentica.linearalgebra.field;
 
 import java.math.BigInteger;
 

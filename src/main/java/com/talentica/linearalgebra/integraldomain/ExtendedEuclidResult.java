@@ -1,4 +1,4 @@
-package com.geekyarticles.linearalgebra.integraldomain;
+package com.talentica.linearalgebra.integraldomain;
 
 public class ExtendedEuclidResult<E> {
     private E gcd;

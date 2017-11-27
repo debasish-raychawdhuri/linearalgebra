@@ -1,6 +1,6 @@
-package com.geekyarticles.linearalgebra.matrix;
+package com.talentica.linearalgebra.matrix;
 
-import com.geekyarticles.linearalgebra.field.FloatField;
+import com.talentica.linearalgebra.field.FloatField;
 import org.apfloat.Apfloat;
 import org.junit.Test;
 import static org.junit.Assert.*;

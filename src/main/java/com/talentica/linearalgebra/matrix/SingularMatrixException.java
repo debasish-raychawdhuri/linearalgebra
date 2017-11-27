@@ -1,4 +1,4 @@
-package com.geekyarticles.linearalgebra.matrix;
+package com.talentica.linearalgebra.matrix;
 
 /**
  * Created by debasishc on 2/8/17.

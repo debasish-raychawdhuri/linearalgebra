@@ -1,8 +1,8 @@
-package com.geekyarticles.linearalgebra.field;
+package com.talentica.linearalgebra.field;
 
-import com.geekyarticles.linearalgebra.integraldomain.ExtendedEuclidResult;
-import com.geekyarticles.linearalgebra.integraldomain.Polynomial;
-import com.geekyarticles.linearalgebra.integraldomain.PolynomialRing;
+import com.talentica.linearalgebra.integraldomain.ExtendedEuclidResult;
+import com.talentica.linearalgebra.integraldomain.Polynomial;
+import com.talentica.linearalgebra.integraldomain.PolynomialRing;
 
 public class PolynomialModuloIrreducibleField<E> extends PolynomialRing<E> implements Field<Polynomial<E>> {
     private Polynomial<E> irreducibleBase;

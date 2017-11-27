@@ -1,6 +1,6 @@
-package com.geekyarticles.linearalgebra.integraldomain;
+package com.talentica.linearalgebra.integraldomain;
 
-import com.geekyarticles.linearalgebra.field.Field;
+import com.talentica.linearalgebra.field.Field;
 
 public class PolynomialRing<E> implements EuclideanDomain<Polynomial<E>> {
     protected Field<E> baseField;

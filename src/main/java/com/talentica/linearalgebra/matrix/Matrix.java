@@ -1,8 +1,6 @@
-package com.geekyarticles.linearalgebra.matrix;
+package com.talentica.linearalgebra.matrix;
 
-import com.geekyarticles.linearalgebra.field.Field;
-import com.geekyarticles.linearalgebra.field.FloatField;
-import org.apfloat.Apfloat;
+import com.talentica.linearalgebra.field.Field;
 
 import java.util.Arrays;
 
@@ -14,6 +12,11 @@ public class Matrix<E, F extends Field<E>> {
     int cols;
     F field;
     E [][] values;
+
+    public E[][] getValues(){
+        return values;
+    }
+
     public Matrix(int rows, int cols, F field) {
         this.rows = rows;
         this.cols = cols;
@@ -28,7 +31,19 @@ public class Matrix<E, F extends Field<E>> {
         this. field = field;
     }
 
-    private void checkAdditionCompatibility(Matrix<E, F> rhs){
+    public Matrix<E,F> scale(E scaler){
+        E [][] result = (E[][]) new Object[rows][cols];
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                result[i][j] = field.multiply(values[i][j], scaler);
+            }
+        }
+        return new Matrix<>(result, field);
+    }
+
+
+
+    protected void checkAdditionCompatibility(Matrix<E, F> rhs){
         if(this.rows!=rhs.rows || this.cols!=rhs.cols){
             throw new IllegalArgumentException("The matrices have incompatible dimensions for addition");
         }
@@ -45,7 +60,7 @@ public class Matrix<E, F extends Field<E>> {
         return new Matrix<>(result, field);
     }
 
-    private void checkMultiplicationCompatibility(Matrix<E,F> lhs, Matrix<E,F> rhs){
+    protected void checkMultiplicationCompatibility(Matrix<E,F> lhs, Matrix<E,F> rhs){
         if(lhs.cols!=rhs.rows){
             throw new IllegalArgumentException("Matrices have incompatible dimensions for multiplication");
         }

@@ -1,7 +1,7 @@
-package com.geekyarticles.linearalgebra.integraldomain;
+package com.talentica.linearalgebra.integraldomain;
 
-import com.geekyarticles.linearalgebra.ring.Ring;
-import com.geekyarticles.linearalgebra.util.Tuple;
+import com.talentica.linearalgebra.ring.Ring;
+import com.talentica.linearalgebra.util.Tuple;
 
 public interface EuclideanDomain<E> extends Ring<E> {
     double euclideanFunction(E argument);

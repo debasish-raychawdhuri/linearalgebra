@@ -1,6 +1,6 @@
-package com.geekyarticles.linearalgebra.field;
+package com.talentica.linearalgebra.field;
 
-import com.geekyarticles.linearalgebra.ring.Ring;
+import com.talentica.linearalgebra.ring.Ring;
 
 /**
  * Created by debasishc on 1/8/17.

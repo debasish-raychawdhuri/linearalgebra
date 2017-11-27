@@ -1,4 +1,4 @@
-package com.geekyarticles.linearalgebra.ring;
+package com.talentica.linearalgebra.ring;
 
 public interface Ring<E>  {
     E add(E lhs, E rhs);

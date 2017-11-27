@@ -1,8 +1,8 @@
-package com.geekyarticles.linearalgebra.integraldomain;
+package com.talentica.linearalgebra.integraldomain;
 
-import com.geekyarticles.linearalgebra.field.Field;
-import com.geekyarticles.linearalgebra.field.RationalField;
-import com.geekyarticles.linearalgebra.field.RationalNumber;
+import com.talentica.linearalgebra.field.Field;
+import com.talentica.linearalgebra.field.RationalField;
+import com.talentica.linearalgebra.field.RationalNumber;
 
 import java.math.BigInteger;
 import java.util.Arrays;

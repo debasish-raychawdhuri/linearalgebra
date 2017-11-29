@@ -262,6 +262,49 @@ public class Matrix<E, F extends Field<E>> {
         }
     }
 
+    private void doInplaceCholesky(E[][] values, int topLeftXY){
+        E a11 = values[topLeftXY][topLeftXY];
+        E l11= field.nthRoot(a11,2);
+        values[topLeftXY][topLeftXY] = l11;
+        if(topLeftXY==values.length-1){
+            return;
+        }
+
+
+        //S = A22 - (1/a11) A21 A12
+        //S = LsLs*
+        for(int i=topLeftXY+1;i<values.length;i++){
+            for(int j=topLeftXY+1;j<values.length;j++){
+                E toSub = field.divide(field.multiply(values[i][topLeftXY],
+                        (values[topLeftXY][j])),
+                        a11);
+
+                values[i][j] = field.substract(values[i][j],toSub);
+            }
+        }
+
+        for(int i=topLeftXY+1;i<values.length;i++){
+            values[i][topLeftXY] = field.divide(values[i][topLeftXY],l11);
+            values[topLeftXY][i] = field.zero();
+        }
+        doInplaceCholesky(values, topLeftXY+1);
+    }
+
+    public Matrix doCholesky(){
+        if(rows!=cols){
+            throw new IllegalArgumentException("Matrix needs to be symmetric and positive definite for Cholesky decomposition");
+        }
+        E[][] vClone = (E[][]) new Object[values.length][values.length];
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<cols;j++){
+                vClone[i][j] = values[i][j];
+            }
+        }
+        Matrix result = new Matrix(vClone,field);
+        doInplaceCholesky(vClone,0);
+        return result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 public class FloatMatrixTest {
     @Test
-    public void testAdd2x2(){
+    public void testDoCholesky(){
         int precision = 10;
         FloatField field = new FloatField(precision);
         Apfloat[][] lhsValues = new Apfloat[][]{

@@ -1,6 +1,7 @@
 package com.talentica.linearalgebra.field;
 
 import org.apfloat.Apfloat;
+import org.apfloat.ApfloatMath;
 
 
 /**
@@ -46,5 +47,10 @@ public class FloatField implements Field<Apfloat> {
     @Override
     public Apfloat negate(Apfloat value) {
         return zero.subtract(value);
+    }
+
+    @Override
+    public Apfloat nthRoot(Apfloat value, int n) {
+        return ApfloatMath.root(value, n);
     }
 }

@@ -6,4 +6,7 @@ public interface Ring<E>  {
     E one();
     E zero();
     E negate(E value);
+    default E substract(E lhs, E rhs){
+        return add(lhs, negate(rhs));
+    }
 }

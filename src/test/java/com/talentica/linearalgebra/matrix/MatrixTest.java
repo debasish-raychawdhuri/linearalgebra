@@ -118,14 +118,14 @@ public class MatrixTest {
         int precision = 10;
         Field<Apfloat> field = new FloatField(precision);
         Apfloat[][] lhsValues = new Apfloat[][]{
-                {new Apfloat(3,precision), new Apfloat(0, precision), new Apfloat(0, precision)},
+                {new Apfloat(1,precision), new Apfloat(0, precision), new Apfloat(0, precision)},
                 {new Apfloat(2, precision), new Apfloat(2, precision), new Apfloat(0, precision)},
-                {new Apfloat(2, precision), new Apfloat(1, precision), new Apfloat(2, precision)}
+                {new Apfloat(1, precision), new Apfloat(1, precision), new Apfloat(2, precision)}
         };
 
         Matrix<Apfloat, FloatField> m = new Matrix(lhsValues, field);
         Matrix testM = m.multiply(m.transpose());
-        System.out.println(testM);
+        //System.out.println(testM);
 
         Matrix c = testM.doCholesky();
         //System.out.println(c);

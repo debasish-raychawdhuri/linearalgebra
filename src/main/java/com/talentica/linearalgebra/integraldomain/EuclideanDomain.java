@@ -6,6 +6,7 @@ import com.talentica.linearalgebra.util.Pair;
 public interface EuclideanDomain<E> extends Ring<E> {
     double euclideanFunction(E argument);
     DivisionAlgorithmResult<E> divisionAlgorithm(E dividend, E divisor);
+
     default ExtendedEuclidResult<E> extendedEulidAlgorithm(E left, E right){
         Pair<E,E> firstPair, secondPair, remainderPair;
         E firstValue, secondValue, remainderValue;

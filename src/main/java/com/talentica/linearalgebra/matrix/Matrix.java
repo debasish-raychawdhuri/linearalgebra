@@ -11,19 +11,19 @@ public class Matrix<E, F extends Field<E>> {
     int rows;
     int cols;
     F field;
-    E [][] values;
+    Object [][] values;
 
-    public E[][] getValues(){
+    public Object[][] getValues(){
         return values;
     }
 
     public Matrix(int rows, int cols, F field) {
         this.rows = rows;
         this.cols = cols;
-        values = (E[][]) new Object[rows][cols];
+        values = new Object[rows][cols];
         this. field = field;
     }
-    public Matrix(E[][] values, F field){
+    public Matrix(Object[][] values, F field){
         this.values = values;
         rows = values.length;
         cols = values[0].length;
@@ -32,10 +32,10 @@ public class Matrix<E, F extends Field<E>> {
     }
 
     public Matrix<E,F> scale(E scaler){
-        E [][] result = (E[][]) new Object[rows][cols];
+        Object [][] result =  new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[i][j] = field.multiply(values[i][j], scaler);
+                result[i][j] = field.multiply((E)values[i][j], scaler);
             }
         }
         return new Matrix<>(result, field);
@@ -51,10 +51,10 @@ public class Matrix<E, F extends Field<E>> {
 
     public Matrix<E,F> add(Matrix<E, F> rhs){
         checkAdditionCompatibility(rhs);
-        E [][] result = (E[][]) new Object[rows][cols];
+        Object [][] result = new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[i][j] = field.add(values[i][j],rhs.values[i][j]);
+                result[i][j] = field.add((E)values[i][j],(E)rhs.values[i][j]);
             }
         }
         return new Matrix<>(result, field);
@@ -68,7 +68,7 @@ public class Matrix<E, F extends Field<E>> {
 
     public Matrix<E,F> multiply(Matrix<E, F> rhs){
         checkMultiplicationCompatibility(this, rhs);
-        E [][] result = (E[][]) new Object[rows][cols];
+        Object [][] result = new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
                 result[i][j] = field.zero();
@@ -77,7 +77,7 @@ public class Matrix<E, F extends Field<E>> {
         for(int i=0;i<rows;i++){
             for(int j=0;j<rhs.cols;j++){
                 for(int k=0;k<cols;k++){
-                    result[i][j] = field.add(result[i][j],field.multiply(values[i][k], rhs.values[k][j]));
+                    result[i][j] = field.add((E)result[i][j],field.multiply((E)values[i][k], (E)rhs.values[k][j]));
                 }
 
             }
@@ -92,28 +92,28 @@ public class Matrix<E, F extends Field<E>> {
     }
 
     public Matrix<E,F> transpose(){
-        E [][] result = (E[][]) new Object[cols][rows];
+        Object [][] result = new Object[cols][rows];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[j][i] = values[i][j];
+                result[j][i] = (E)values[i][j];
             }
         }
         return new Matrix<>(result, field);
     }
 
     public int getRank(){
-        E [][] matrix = (E[][]) new Object[rows][cols];
+        Object [][] matrix = new Object[rows][cols];
 
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                matrix[i][j] = values[i][j];
+                matrix[i][j] = (E)values[i][j];
             }
         }
 
         return getRank(0, matrix);
     }
 
-    private int getRank(int diagpos, E[][] matrix){
+    private int getRank(int diagpos, Object[][] matrix){
         if(diagpos>=rows){
             return 0;
         }else if(diagpos>=cols){
@@ -129,10 +129,10 @@ public class Matrix<E, F extends Field<E>> {
                     return i+getRank(i+1, matrix);
                 }
             }
-            E pivotValue = matrix[i][i];
+            E pivotValue = (E)matrix[i][i];
             multiplyRow(matrix, i, field.invert(pivotValue));
             for(int j=i+1;j<rows;j++){
-                E mult = matrix[j][i];
+                E mult = (E)matrix[j][i];
                 substractMultipleOf(matrix,i,j,mult);
             }
         }
@@ -141,8 +141,8 @@ public class Matrix<E, F extends Field<E>> {
 
     public Matrix<E,F> invert(){
         checkSquareMatrix();
-        E [][] result = (E[][]) new Object[rows][cols];
-        E [][] appendage = (E[][]) new Object[rows][cols];
+        Object [][] result = new Object[rows][cols];
+        Object [][] appendage = new Object[rows][cols];
 
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
@@ -157,43 +157,43 @@ public class Matrix<E, F extends Field<E>> {
 
         for(int i=0;i<rows;i++){
             swapWithPivotRow(appendage, result, i);
-            E pivotValue = appendage[i][i];
+            E pivotValue = (E)appendage[i][i];
             multiplyRow(appendage, result, i, field.invert(pivotValue));
             for(int j=i+1;j<rows;j++){
-                E mult = appendage[j][i];
+                E mult = (E)appendage[j][i];
                 substractMultipleOf(appendage, result,i,j,mult);
             }
         }
         for(int i=rows-1;i>=0;i--){
             for(int j=i-1;j>=0;j--){
-                E mult = appendage[j][i];
+                E mult = (E)appendage[j][i];
                 substractMultipleOf(appendage, result,i,j,mult);
             }
         }
         return new Matrix<>(result, field);
     }
 
-    private void swapRows(E [][] appendage, E [][] result, int row1, int row2){
+    private void swapRows(Object [][] appendage, Object [][] result, int row1, int row2){
         swapRows(appendage, row1, row2);
         swapRows(result, row1, row2);
     }
 
-    private void swapRows(E [][] matrix, int row1, int row2){
-        E[] r1 = matrix[row1];
-        E[] r2 = matrix[row2];
+    private void swapRows(Object [][] matrix, int row1, int row2){
+        Object[] r1 = matrix[row1];
+        Object[] r2 = matrix[row2];
         matrix[row1] = r2;
         matrix[row2] = r1;
     }
 
-    private void swapColumns(E [][] matrix, int col1, int col2){
+    private void swapColumns(Object [][] matrix, int col1, int col2){
         for(int i=0;i<rows;i++){
-            E temp = matrix[i][col1];
+            E temp = (E)matrix[i][col1];
             matrix[i][col1] = matrix[i][col2];
             matrix[i][col2] = temp;
         }
     }
 
-    private int findPivotRow(E[][] matrix, int column){
+    private int findPivotRow(Object[][] matrix, int column){
         for(int i=column;i<rows;i++){
             if(!matrix[i][column].equals(field.zero())){
                 return i;
@@ -202,23 +202,23 @@ public class Matrix<E, F extends Field<E>> {
         return -1;
     }
 
-    private int findPivotColumn(E[][] matrix, int row){
+    private int findPivotColumn(Object[][] matrix, int row){
         for(int i=row;i<cols;i++){
             if(!matrix[row][i].equals(field.zero())){
                 return i;
             }
         }
-        return -1;
+        throw new SingularMatrixException("Matrix is non-invertible");
     }
 
-    private void swapWithPivotRow(E [][] appendage, E [][] result, int pivotColumn){
+    private void swapWithPivotRow(Object [][] appendage, Object [][] result, int pivotColumn){
         int pivotRow = findPivotRow(appendage, pivotColumn);
         if(pivotRow!=pivotColumn){
             swapRows(appendage, result, pivotRow, pivotColumn);
         }
     }
 
-    private void swapWithPivotRow(E [][] appendage, int pivotColumn){
+    private void swapWithPivotRow(Object [][] appendage, int pivotColumn){
         int pivotRow = findPivotRow(appendage, pivotColumn);
         if(pivotRow<0){
             throw new SingularMatrixException("The matrix is singular");
@@ -228,7 +228,7 @@ public class Matrix<E, F extends Field<E>> {
         }
     }
 
-    private void swapWithPivotColumn(E [][] appendage, int pivotRow){
+    private void swapWithPivotColumn(Object [][] appendage, int pivotRow){
         int pivotColumn = findPivotColumn(appendage, pivotRow);
         if(pivotColumn<0){
             throw new SingularMatrixException("The matrix is singular");
@@ -238,32 +238,32 @@ public class Matrix<E, F extends Field<E>> {
         }
     }
 
-    private void substractMultipleOf(E [][] appendage, E [][] result, int source, int target, E multiplier){
+    private void substractMultipleOf(Object [][] appendage, Object [][] result, int source, int target, E multiplier){
         substractMultipleOf(appendage, source, target, multiplier);
         substractMultipleOf(result, source, target, multiplier);
     }
 
-    private void substractMultipleOf(E [][] matrix, int source, int target, E multiplier){
+    private void substractMultipleOf(Object [][] matrix, int source, int target, E multiplier){
         for(int j=0;j<cols;j++){
             matrix[target][j]
-                    = field.add(matrix[target][j], field.negate(field.multiply(matrix[source][j], multiplier)));
+                    = field.add((E)matrix[target][j], field.negate(field.multiply((E)matrix[source][j], multiplier)));
         }
     }
 
-    private void multiplyRow(E [][] appendage, E [][] result, int row,E multiplier){
+    private void multiplyRow(Object [][] appendage, Object [][] result, int row,E multiplier){
         multiplyRow(appendage, row, multiplier);
         multiplyRow(result, row, multiplier);
     }
 
-    private void multiplyRow(E [][] matrix, int row,E multiplier){
+    private void multiplyRow(Object [][] matrix, int row,E multiplier){
         for(int j=0;j<cols;j++){
             matrix[row][j]
-                    = field.multiply(matrix[row][j], multiplier);
+                    = field.multiply((E)matrix[row][j], multiplier);
         }
     }
 
-    private void doInplaceCholesky(E[][] values, int topLeftXY){
-        E a11 = values[topLeftXY][topLeftXY];
+    private void doInplaceCholesky(Object[][] values, int topLeftXY){
+        E a11 = (E)values[topLeftXY][topLeftXY];
         E l11= field.nthRoot(a11,2);
         values[topLeftXY][topLeftXY] = l11;
         if(topLeftXY==values.length-1){
@@ -275,16 +275,16 @@ public class Matrix<E, F extends Field<E>> {
         //S = LsLs*
         for(int i=topLeftXY+1;i<values.length;i++){
             for(int j=topLeftXY+1;j<values.length;j++){
-                E toSub = field.divide(field.multiply(values[i][topLeftXY],
-                        (values[topLeftXY][j])),
+                E toSub = field.divide(field.multiply((E)values[i][topLeftXY],
+                        ((E)values[topLeftXY][j])),
                         a11);
 
-                values[i][j] = field.substract(values[i][j],toSub);
+                values[i][j] = field.substract((E)values[i][j],toSub);
             }
         }
 
         for(int i=topLeftXY+1;i<values.length;i++){
-            values[i][topLeftXY] = field.divide(values[i][topLeftXY],l11);
+            values[i][topLeftXY] = field.divide((E)values[i][topLeftXY],l11);
             values[topLeftXY][i] = field.zero();
         }
         doInplaceCholesky(values, topLeftXY+1);
@@ -294,7 +294,7 @@ public class Matrix<E, F extends Field<E>> {
         if(rows!=cols){
             throw new IllegalArgumentException("Matrix needs to be symmetric and positive definite for Cholesky decomposition");
         }
-        E[][] vClone = (E[][]) new Object[values.length][values.length];
+        Object[][] vClone = new Object[values.length][values.length];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
                 vClone[i][j] = values[i][j];
@@ -337,14 +337,16 @@ public class Matrix<E, F extends Field<E>> {
 
         int [] colWidths = new int[cols];
         int totalWidth = 0;
-        for(int i=0;i<rows;i++){
-            for(int j=0;j<cols;j++){
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 int widthOfValue = values[i][j].toString().length();
-                if(widthOfValue>colWidths[j]){
+                if (widthOfValue > colWidths[j]) {
                     colWidths[j] = widthOfValue;
                 }
             }
         }
+
         for(int i=0;i<colWidths.length;i++){
             totalWidth+=colWidths[i]+2;
         }

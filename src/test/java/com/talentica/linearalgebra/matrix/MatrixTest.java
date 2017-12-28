@@ -128,8 +128,8 @@ public class MatrixTest {
         System.out.println(testM);
 
         Matrix c = testM.doCholesky();
-        System.out.println(c);
-        System.out.println(c.multiply(c.transpose()));
-        //assertEquals(c,m);
+        //System.out.println(c);
+        //System.out.println(c.multiply(c.transpose()));
+        assertEquals(c,m);
     }
 }

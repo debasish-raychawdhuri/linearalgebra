@@ -34,4 +34,14 @@ public class RationalField implements Field<RationalNumber>{
     public RationalNumber negate(RationalNumber value) {
         return value.negate();
     }
+
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getClass().equals(obj.getClass());
+    }
 }

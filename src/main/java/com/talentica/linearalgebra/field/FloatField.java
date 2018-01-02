@@ -3,6 +3,8 @@ package com.talentica.linearalgebra.field;
 import org.apfloat.Apfloat;
 import org.apfloat.ApfloatMath;
 
+import java.util.Objects;
+
 
 /**
  * Created by debasishc on 1/8/17.
@@ -52,5 +54,21 @@ public class FloatField implements Field<Apfloat> {
     @Override
     public Apfloat nthRoot(Apfloat value, int n) {
         return ApfloatMath.root(value, n);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FloatField that = (FloatField) o;
+        return precision == that.precision &&
+                Objects.equals(zero, that.zero) &&
+                Objects.equals(one, that.one);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(precision, zero, one);
     }
 }

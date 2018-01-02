@@ -22,12 +22,12 @@ public class PolynomialRing<E> implements EuclideanDomain<Polynomial<E>> {
 
     @Override
     public Polynomial<E> one() {
-        return new Polynomial<E>(baseField, (E[]) new Object[]{});
+        return new Polynomial<E>(baseField, (E[]) new Object[]{baseField.one()});
     }
 
     @Override
     public Polynomial<E> zero() {
-        return new Polynomial<E>(baseField, (E[]) new Object[]{baseField.one()});
+        return new Polynomial<E>(baseField, (E[]) new Object[]{});
     }
 
     @Override

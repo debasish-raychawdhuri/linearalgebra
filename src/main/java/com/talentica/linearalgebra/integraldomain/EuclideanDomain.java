@@ -22,7 +22,7 @@ public interface EuclideanDomain<E> extends Ring<E> {
             firstValue = left;
         }
         while(true){
-            DivisionAlgorithmResult<E> divisionAlgorithmResult = divisionAlgorithm(firstValue, secondValue);
+            DivisionAlgorithmResult<E> divisionAlgorithmResult = divisionAlgorithm(secondValue, firstValue);
             remainderValue = divisionAlgorithmResult.getRemainder();
             if(remainderValue.equals(zero())){
                 return new ExtendedEuclidResult<>(firstValue, firstPair.first, firstPair.last);

@@ -1,6 +1,7 @@
 package com.talentica.linearalgebra.field;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 public class IntegerModuloPrimeField implements Field<BigInteger>{
     private BigInteger primeDivisor;
@@ -42,4 +43,17 @@ public class IntegerModuloPrimeField implements Field<BigInteger>{
         return value.modInverse(primeDivisor);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IntegerModuloPrimeField that = (IntegerModuloPrimeField) o;
+        return Objects.equals(primeDivisor, that.primeDivisor);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(primeDivisor);
+    }
 }

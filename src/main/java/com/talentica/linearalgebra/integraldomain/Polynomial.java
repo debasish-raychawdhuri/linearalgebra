@@ -6,6 +6,7 @@ import com.talentica.linearalgebra.field.RationalNumber;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Polynomial<E> {
     private Field<E> baseField;
@@ -22,7 +23,10 @@ public class Polynomial<E> {
         if(rhs.coefficients.length>degree){
             degree = rhs.coefficients.length;
         }
-        while(degree>=0){
+        if(degree==0){
+            return this;
+        }
+        while(degree>0){
             E firstVal = this.coefficients.length>=degree? this.coefficients[degree-1]:baseField.zero();
             E secondVal = rhs.coefficients.length>=degree? rhs.coefficients[degree-1]:baseField.zero();
             if(baseField.add(firstVal,secondVal).equals(baseField.zero())){
@@ -116,6 +120,23 @@ public class Polynomial<E> {
         }
 
         return new DivisionAlgorithmResult<>(new Polynomial<>(baseField, qCoeffs), new Polynomial<>(baseField, rCoeffsRev));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Polynomial<?> that = (Polynomial<?>) o;
+        return Objects.equals(baseField, that.baseField) &&
+                Arrays.equals(coefficients, that.coefficients);
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(baseField);
+        result = 31 * result + Arrays.hashCode(coefficients);
+        return result;
     }
 
     @Override

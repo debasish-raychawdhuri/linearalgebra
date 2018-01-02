@@ -1,44 +1,45 @@
 package com.talentica.linearalgebra.matrix;
 
 import com.talentica.linearalgebra.field.Field;
+import com.talentica.linearalgebra.ring.Ring;
 
 import java.util.Arrays;
 
 /**
  * Created by debasishc on 1/8/17.
  */
-public class Matrix<E, F extends Field<E>> {
+public class Matrix<E, F extends Ring<E>> {
     int rows;
     int cols;
-    F field;
+    F ring;
     Object [][] values;
 
     public Object[][] getValues(){
         return values;
     }
 
-    public Matrix(int rows, int cols, F field) {
+    public Matrix(int rows, int cols, F ring) {
         this.rows = rows;
         this.cols = cols;
         values = new Object[rows][cols];
-        this. field = field;
+        this.ring = ring;
     }
-    public Matrix(Object[][] values, F field){
+    public Matrix(Object[][] values, F ring){
         this.values = values;
         rows = values.length;
         cols = values[0].length;
 
-        this. field = field;
+        this.ring = ring;
     }
 
     public Matrix<E,F> scale(E scaler){
         Object [][] result =  new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[i][j] = field.multiply((E)values[i][j], scaler);
+                result[i][j] = ring.multiply((E)values[i][j], scaler);
             }
         }
-        return new Matrix<>(result, field);
+        return new Matrix<>(result, ring);
     }
 
 
@@ -54,10 +55,10 @@ public class Matrix<E, F extends Field<E>> {
         Object [][] result = new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[i][j] = field.add((E)values[i][j],(E)rhs.values[i][j]);
+                result[i][j] = ring.add((E)values[i][j],(E)rhs.values[i][j]);
             }
         }
-        return new Matrix<>(result, field);
+        return new Matrix<>(result, ring);
     }
 
     protected void checkMultiplicationCompatibility(Matrix<E,F> lhs, Matrix<E,F> rhs){
@@ -71,18 +72,18 @@ public class Matrix<E, F extends Field<E>> {
         Object [][] result = new Object[rows][cols];
         for(int i=0;i<rows;i++){
             for(int j=0;j<cols;j++){
-                result[i][j] = field.zero();
+                result[i][j] = ring.zero();
             }
         }
         for(int i=0;i<rows;i++){
             for(int j=0;j<rhs.cols;j++){
                 for(int k=0;k<cols;k++){
-                    result[i][j] = field.add((E)result[i][j],field.multiply((E)values[i][k], (E)rhs.values[k][j]));
+                    result[i][j] = ring.add((E)result[i][j],ring.multiply((E)values[i][k], (E)rhs.values[k][j]));
                 }
 
             }
         }
-        return new Matrix<>(result, field);
+        return new Matrix<>(result, ring);
     }
 
     private void checkSquareMatrix(){
@@ -98,7 +99,7 @@ public class Matrix<E, F extends Field<E>> {
                 result[j][i] = (E)values[i][j];
             }
         }
-        return new Matrix<>(result, field);
+        return new Matrix<>(result, ring);
     }
 
     public int getRank(){
@@ -114,6 +115,10 @@ public class Matrix<E, F extends Field<E>> {
     }
 
     private int getRank(int diagpos, Object[][] matrix){
+        if(!(ring instanceof Field)){
+            throw new UnsupportedOperationException("Operation not supported for Matrix on a non-field");
+        }
+        Field<E> field = (Field<E>) ring;
         if(diagpos>=rows){
             return 0;
         }else if(diagpos>=cols){
@@ -140,6 +145,10 @@ public class Matrix<E, F extends Field<E>> {
     }
 
     public Matrix<E,F> invert(){
+        if(!(ring instanceof Field)){
+            throw new UnsupportedOperationException("Operation not supported for Matrix on a non-field");
+        }
+        Field<E> field = (Field<E>) ring;
         checkSquareMatrix();
         Object [][] result = new Object[rows][cols];
         Object [][] appendage = new Object[rows][cols];
@@ -148,9 +157,9 @@ public class Matrix<E, F extends Field<E>> {
             for(int j=0;j<cols;j++){
                 appendage[i][j] = values[i][j];
                 if(i==j){
-                    result[i][j] = field.one();
+                    result[i][j] = ring.one();
                 }else{
-                    result[i][j] = field.zero();
+                    result[i][j] = ring.zero();
                 }
             }
         }
@@ -170,7 +179,7 @@ public class Matrix<E, F extends Field<E>> {
                 substractMultipleOf(appendage, result,i,j,mult);
             }
         }
-        return new Matrix<>(result, field);
+        return new Matrix<>(result, ring);
     }
 
     private void swapRows(Object [][] appendage, Object [][] result, int row1, int row2){
@@ -195,7 +204,7 @@ public class Matrix<E, F extends Field<E>> {
 
     private int findPivotRow(Object[][] matrix, int column){
         for(int i=column;i<rows;i++){
-            if(!matrix[i][column].equals(field.zero())){
+            if(!matrix[i][column].equals(ring.zero())){
                 return i;
             }
         }
@@ -204,7 +213,7 @@ public class Matrix<E, F extends Field<E>> {
 
     private int findPivotColumn(Object[][] matrix, int row){
         for(int i=row;i<cols;i++){
-            if(!matrix[row][i].equals(field.zero())){
+            if(!matrix[row][i].equals(ring.zero())){
                 return i;
             }
         }
@@ -246,7 +255,7 @@ public class Matrix<E, F extends Field<E>> {
     private void substractMultipleOf(Object [][] matrix, int source, int target, E multiplier){
         for(int j=0;j<cols;j++){
             matrix[target][j]
-                    = field.add((E)matrix[target][j], field.negate(field.multiply((E)matrix[source][j], multiplier)));
+                    = ring.add((E)matrix[target][j], ring.negate(ring.multiply((E)matrix[source][j], multiplier)));
         }
     }
 
@@ -258,11 +267,15 @@ public class Matrix<E, F extends Field<E>> {
     private void multiplyRow(Object [][] matrix, int row,E multiplier){
         for(int j=0;j<cols;j++){
             matrix[row][j]
-                    = field.multiply((E)matrix[row][j], multiplier);
+                    = ring.multiply((E)matrix[row][j], multiplier);
         }
     }
 
     private void doInplaceCholesky(Object[][] values, int topLeftXY){
+        if(!(ring instanceof Field)){
+            throw new UnsupportedOperationException("Operation not supported for Matrix on a non-field");
+        }
+        Field<E> field = (Field<E>) ring;
         E a11 = (E)values[topLeftXY][topLeftXY];
         E l11= field.nthRoot(a11,2);
         values[topLeftXY][topLeftXY] = l11;
@@ -300,7 +313,7 @@ public class Matrix<E, F extends Field<E>> {
                 vClone[i][j] = values[i][j];
             }
         }
-        Matrix result = new Matrix(vClone,field);
+        Matrix result = new Matrix(vClone,ring);
         doInplaceCholesky(vClone,0);
         return result;
     }
@@ -314,7 +327,7 @@ public class Matrix<E, F extends Field<E>> {
 
         if (rows != matrix.rows) return false;
         if (cols != matrix.cols) return false;
-        if (!field.equals(matrix.field)) return false;
+        if (!ring.equals(matrix.ring)) return false;
         return Arrays.deepEquals(values, matrix.values);
     }
 
@@ -322,7 +335,7 @@ public class Matrix<E, F extends Field<E>> {
     public int hashCode() {
         int result = rows;
         result = 31 * result + cols;
-        result = 31 * result + field.hashCode();
+        result = 31 * result + ring.hashCode();
         result = 31 * result + Arrays.deepHashCode(values);
         return result;
     }

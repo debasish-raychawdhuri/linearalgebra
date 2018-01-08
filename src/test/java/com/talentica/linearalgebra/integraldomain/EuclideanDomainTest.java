@@ -12,13 +12,13 @@ import static org.junit.Assert.*;
 public class EuclideanDomainTest {
     @Test
     public void testDivisionAlgorith(){
-        EuclideanDomain<Long> dom = new Integers();
+        EuclideanDomain<Long> dom = new Longs();
         DivisionAlgorithmResult<Long> result = dom.divisionAlgorithm(35l,9l);
         assertEquals(Long.valueOf(8l), result.getRemainder());
     }
     @Test
     public void testExtendedEulidAlgorithm(){
-        EuclideanDomain<Long> dom = new Integers();
+        EuclideanDomain<Long> dom = new Longs();
         Long left = 10l, right = 3l;
         ExtendedEuclidResult<Long> result = dom.extendedEulidAlgorithm(left,right);
         assertEquals(Long.valueOf(1l), result.getGcd());
@@ -26,7 +26,7 @@ public class EuclideanDomainTest {
     }
     @Test
     public void testExtendedEulidAlgorithm2(){
-        EuclideanDomain<Long> dom = new Integers();
+        EuclideanDomain<Long> dom = new Longs();
         Long left = 10l, right = 35l;
         ExtendedEuclidResult<Long> result = dom.extendedEulidAlgorithm(left,right);
         assertEquals(Long.valueOf(5l), result.getGcd());

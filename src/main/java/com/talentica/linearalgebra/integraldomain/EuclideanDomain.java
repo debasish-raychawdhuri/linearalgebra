@@ -3,14 +3,16 @@ package com.talentica.linearalgebra.integraldomain;
 import com.talentica.linearalgebra.ring.Ring;
 import com.talentica.linearalgebra.util.Pair;
 
+import java.math.BigInteger;
+
 public interface EuclideanDomain<E> extends Ring<E> {
-    double euclideanFunction(E argument);
+    BigInteger euclideanFunction(E argument);
     DivisionAlgorithmResult<E> divisionAlgorithm(E dividend, E divisor);
 
     default ExtendedEuclidResult<E> extendedEulidAlgorithm(E left, E right){
         Pair<E,E> firstPair, secondPair, remainderPair;
         E firstValue, secondValue, remainderValue;
-        if(euclideanFunction(left)> euclideanFunction(right)){
+        if(euclideanFunction(left).compareTo(euclideanFunction(right))>0){
             firstPair = new Pair<>(zero(), one());
             secondPair = new Pair<>(one(), zero());
             firstValue = right;

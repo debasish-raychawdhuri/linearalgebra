@@ -2,6 +2,8 @@ package com.talentica.linearalgebra.integraldomain;
 
 import com.talentica.linearalgebra.field.Field;
 
+import java.math.BigInteger;
+
 public class PolynomialRing<E> implements EuclideanDomain<Polynomial<E>> {
     protected Field<E> baseField;
 
@@ -36,8 +38,8 @@ public class PolynomialRing<E> implements EuclideanDomain<Polynomial<E>> {
     }
 
     @Override
-    public double euclideanFunction(Polynomial<E> argument) {
-        return argument.degree();
+    public BigInteger euclideanFunction(Polynomial<E> argument) {
+        return BigInteger.valueOf(argument.degree());
     }
 
     @Override

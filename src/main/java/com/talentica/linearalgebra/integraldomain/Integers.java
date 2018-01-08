@@ -1,38 +1,40 @@
 package com.talentica.linearalgebra.integraldomain;
 
-public class Integers implements EuclideanDomain<Long>{
+import java.math.BigInteger;
+
+public class Integers implements EuclideanDomain<BigInteger>{
     @Override
-    public double euclideanFunction(Long argument) {
-        return Math.abs(argument);
+    public BigInteger euclideanFunction(BigInteger argument) {
+        return argument.abs();
     }
 
     @Override
-    public DivisionAlgorithmResult<Long> divisionAlgorithm(Long dividend, Long divisor) {
-        return new DivisionAlgorithmResult<>(dividend/divisor, dividend % divisor);
+    public DivisionAlgorithmResult<BigInteger> divisionAlgorithm(BigInteger dividend, BigInteger divisor) {
+        return new DivisionAlgorithmResult<>(dividend.divide(divisor), dividend.mod(divisor));
     }
 
     @Override
-    public Long add(Long lhs, Long rhs) {
-        return lhs+rhs;
+    public BigInteger add(BigInteger lhs, BigInteger rhs) {
+        return lhs.add(rhs);
     }
 
     @Override
-    public Long multiply(Long lhs, Long rhs) {
-        return lhs*rhs;
+    public BigInteger multiply(BigInteger lhs, BigInteger rhs) {
+        return lhs.multiply(rhs);
     }
 
     @Override
-    public Long one() {
-        return 1l;
+    public BigInteger one() {
+        return BigInteger.ONE;
     }
 
     @Override
-    public Long zero() {
-        return 0l;
+    public BigInteger zero() {
+        return BigInteger.ZERO;
     }
 
     @Override
-    public Long negate(Long value) {
-        return -value;
+    public BigInteger negate(BigInteger value) {
+        return value.negate();
     }
 }
